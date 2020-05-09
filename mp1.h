@@ -22,7 +22,7 @@ class MP1
             double trainTime = 0;
             double trainAcc = 0;
 
-            double fakeConst = 2;
+            double smoothing = 1;
 
         public:
             void read(std::string train, std::string test);

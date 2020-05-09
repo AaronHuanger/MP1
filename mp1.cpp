@@ -33,7 +33,7 @@ void MP1::read(std::string train, std::string test){
     time_t start, end;
 
     time(&start);
-    //readStopText(); //makes the stop word text set
+    readStopText(); //makes the stop word text set
     trainData(train);
     time(&end);
 
@@ -118,7 +118,7 @@ void MP1::trainHelper(std::string rate, std::string line){
     std::string token;
 
     while(getline(ss, token, ' ')){
-        if(data->find(token) == data->end()){
+        if((stopWords.find(token) == stopWords.end()) && data->find(token) == data->end()){
             data->insert(std::pair<std::string, int>(token, 1));
             *docCount += 1;
         }else if(data->find(token) != data->end()){
@@ -200,22 +200,22 @@ bool MP1::testHelper(std::string rate, std::string line){
     std::string token;
 
     while(getline(ss, token, ' ')){
-
+        if((stopWords.find(token) == stopWords.end())){
             if(pos.find(token) == pos.end()){
-                pWord = double(1)/(totPWord + pos.size());
+                pWord = double(smoothing)/(totPWord + pos.size());
             }else{
-                pWord = double(pos.at(token)+1)/(totPWord + pos.size());
+                pWord = double(pos.at(token)+smoothing)/(totPWord + pos.size());
             }
             posProb += log(pWord*pPos);
             //posProb *= pWord*pPos;
             if(neg.find(token) == neg.end()){
-                pWord = double(1)/(totNWord + neg.size());
+                pWord = double(smoothing)/(totNWord + neg.size());
             }else{
                 pWord = double(neg.at(token)+1)/(totNWord + neg.size());
             }
             negProb += log(pWord*pNeg);
             //negProb *= pWord*pNeg;
-
+        }
     }
 
     if(std::max(negProb, posProb) == negProb){
