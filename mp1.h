@@ -9,8 +9,8 @@ class MP1
         private:   
             std::map<std::string, int> pos;
             std::map<std::string, int> neg;
-            int totalPos = 0;
-            int totalNeg = 0;             
+            double totalPos = 0;
+            double totalNeg = 0;             
             std::set<std::string> stopWords;
 
             double testTime = 0;
@@ -19,7 +19,7 @@ class MP1
             double trainTime = 0;
             double trainAcc = 0;
 
-            int fakeConst = 1;
+            double fakeConst = 2;
 
         public:
             void read(std::string train, std::string test);

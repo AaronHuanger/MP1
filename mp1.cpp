@@ -105,7 +105,7 @@ void MP1::trainData(std::string train){
 void MP1::trainHelper(std::string rate, std::string line){
     std::map<std::string, int>* data;
 
-    int* docCount; 
+    double* docCount; 
     if(rate == "1"){
         data = &pos;
         docCount = &totalPos;
@@ -188,30 +188,31 @@ std::vector<double> MP1::testData(std::string test){
 bool MP1::testHelper(std::string rate, std::string line){
     //int noFindCount;
 
-    int posProb;
-    int negProb;
+    double posProb;
+    double negProb;
+
+    double pNeg = totalNeg/(totalPos + totalNeg); //P(Cneg)
+    double pPos = totalPos/(totalPos + totalNeg); //P(Cpos)
+
+    double pWord; // P(D | C)
     
     std::istringstream ss(line);
     std::string token;
 
     while(getline(ss, token, ' ')){
-        if((stopWords.find(token) == stopWords.end()) && pos.find(token) == pos.end()){
-            //noFindCount += fakeConst;
-            posProb += log(fakeConst/(totalPos + fakeConst));
-        }else if(pos.find(token) != pos.end()){
-            posProb += log(pos.at(token)/totalPos);        
-        }else{
-            //does nothing with the stop words. Stop words are completely ignored. 
-        }
-    }
-    while(getline(ss, token, ' ')){
-        if((stopWords.find(token) == stopWords.end()) && neg.find(token) == neg.end()){
-            //noFindCount += fakeConst;
-            negProb += log(fakeConst/(totalNeg + fakeConst));
-        }else if(neg.find(token) != neg.end()){
-            negProb += log(neg.at(token)/totalNeg);        
-        }else{
-            //does nothing with the stop words. Stop words are completely ignored. 
+        if((stopWords.find(token) == stopWords.end())){
+            if(pos.find(token) == pos.end()){
+                pWord = double(1)/(totalPos + pos.size());
+            }else{
+                pWord = double(pos.at(token)+1)/(totalPos + pos.size());
+            }
+            posProb += log(pWord*pPos);
+            if(neg.find(token) == neg.end()){
+                pWord = double(1)/(totalNeg + neg.size());
+            }else{
+                pWord = double(neg.at(token)+1)/(totalNeg + neg.size());
+            }
+            negProb += log(pWord*pNeg);
         }
     }
 
@@ -229,3 +230,52 @@ bool MP1::testHelper(std::string rate, std::string line){
         }
     }
 }
+/*bool MP1::testHelper(std::string rate, std::string line){
+    //int noFindCount;
+
+    int posProb = 0;
+    int negProb = 0;
+    
+    int posMatch = 0;
+    int negMatch = 0;
+    
+    std::istringstream ss(line);
+    std::string token;
+
+    while(getline(ss, token, ' ')){
+        if((stopWords.find(token) == stopWords.end()) && pos.find(token) == pos.end()){
+            //noFindCount += fakeConst;
+            posProb += log(fakeConst/(totalPos + fakeConst));
+        }else if(pos.find(token) != pos.end()){
+            posProb += log(pos.at(token)/totalPos);        
+            posMatch++;
+        }else{
+            //does nothing with the stop words. Stop words are completely ignored. 
+        }
+    }
+    while(getline(ss, token, ' ')){
+        if((stopWords.find(token) == stopWords.end()) && neg.find(token) == neg.end()){
+            //noFindCount += fakeConst;
+            negProb += log(fakeConst/(totalNeg + fakeConst));
+        }else if(neg.find(token) != neg.end()){
+            negProb += log(neg.at(token)/totalNeg);        
+            negMatch++;
+        }else{
+            //does nothing with the stop words. Stop words are completely ignored. 
+        }
+    }
+
+    if(std::max(negMatch, posMatch) == negMatch){
+        if(rate == "0"){
+            return true;
+        }else{
+            return false;
+        }
+    }else{
+        if(rate == "1"){
+            return true;
+        }else{
+            return false;
+        }
+    }
+}*/
