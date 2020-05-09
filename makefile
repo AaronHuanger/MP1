@@ -12,7 +12,7 @@ TARGET = mp1
 all: $(TARGET)
 
 $(TARGET): $(TARGET).cpp
-	$(CC) $(CFLAGS) -o $(TARGET) $(TARGET).cpp
+	$(CC) $(CFLAGS) -o NaiveBayesClassifier $(TARGET).cpp
 
 clean:
-	$(RM) $(TARGET)
+	$(RM) NaiveBayesClassifier
