@@ -9,8 +9,11 @@ class MP1
         private:   
             std::map<std::string, int> pos;
             std::map<std::string, int> neg;
+            double totPWord = 0;
+            double totNWord = 0;
+
             double totalPos = 0;
-            double totalNeg = 0;             
+            double totalNeg = 0;           
             std::set<std::string> stopWords;
 
             double testTime = 0;

@@ -36,6 +36,7 @@ void MP1::read(std::string train, std::string test){
     readStopText(); //makes the stop word text set
     trainData(train);
     time(&end);
+
     info = testData(train);
     trainAcc = info[info.size()-1];
     trainTime = double(end - start);
@@ -104,11 +105,13 @@ void MP1::trainHelper(std::string rate, std::string line){
 
     double* docCount; 
     if(rate == "1"){
+        totalPos++;
         data = &pos;
-        docCount = &totalPos;
+        docCount = &totPWord;
     }else{
+        totalNeg++;
         data = &neg;
-        docCount = &totalNeg;
+        docCount = &totNWord;
     }
     
     std::istringstream ss(line);
@@ -199,17 +202,19 @@ bool MP1::testHelper(std::string rate, std::string line){
     while(getline(ss, token, ' ')){
         if((stopWords.find(token) == stopWords.end())){
             if(pos.find(token) == pos.end()){
-                pWord = double(1)/(totalPos + pos.size());
+                pWord = double(1)/(totPWord + pos.size());
             }else{
-                pWord = double(pos.at(token)+1)/(totalPos + pos.size());
+                pWord = double(pos.at(token)+1)/(totPWord + pos.size());
             }
             posProb += log(pWord*pPos);
+            //posProb *= pWord*pPos;
             if(neg.find(token) == neg.end()){
-                pWord = double(1)/(totalNeg + neg.size());
+                pWord = double(1)/(totNWord + neg.size());
             }else{
-                pWord = double(neg.at(token)+1)/(totalNeg + neg.size());
+                pWord = double(neg.at(token)+1)/(totNWord + neg.size());
             }
             negProb += log(pWord*pNeg);
+            //negProb *= pWord*pNeg;
         }
     }
 
