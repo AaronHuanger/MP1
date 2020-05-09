@@ -1,1 +1,2 @@
-#!/bin/bash ./NaiveBayesClassifier $@
+#!/bin/bash 
+./NaiveBayesClassifier $@
