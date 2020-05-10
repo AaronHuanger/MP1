@@ -142,12 +142,12 @@ std::vector<double> MP1::testData(std::string test){
                 }
             }else{
                 labelIsNeg = testHelper("1", line.substr(0,line.find(",")));
-                if(!labelIsNeg){
-                    right++;
-                    info.push_back(1);
-                }else{
+                if(labelIsNeg){
                     wrong++;
                     info.push_back(0);
+                }else{
+                    right++;
+                    info.push_back(1);
                 }
             }
         }
@@ -190,7 +190,7 @@ bool MP1::testHelper(std::string rate, std::string line){
         }
     }
 
-    return (negProb > posProb);
+    return (std::max(negProb, posProb) == negProb);
 
 }
 /*bool MP1::testHelper(std::string rate, std::string line){
