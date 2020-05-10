@@ -24,8 +24,6 @@ class MP1
 
             double smoothing = 1;
 
-            bool testing =false;
-
         public:
             void read(std::string train, std::string test);
 
