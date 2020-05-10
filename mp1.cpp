@@ -110,7 +110,7 @@ void MP1::trainHelper(std::string rate, std::string line){
 
 std::vector<double> MP1::testData(std::string test){
     std::vector<double> info;
-
+    info.resize(0);
     std::ifstream file;
     file.open(test);
 
@@ -150,13 +150,13 @@ std::vector<double> MP1::testData(std::string test){
 bool MP1::testHelper(std::string rate, std::string line){
     //int noFindCount;
 
-    double posProb;
-    double negProb;
+    double posProb = 0;
+    double negProb = 0;
 
     double pNeg = totalNeg/(totalPos + totalNeg); //P(Cneg)
     double pPos = totalPos/(totalPos + totalNeg); //P(Cpos)
 
-    double pWord; // P(D | C)
+    double pWord = 0; // P(D | C)
     
     std::istringstream ss(line);
     std::string token = " ";
