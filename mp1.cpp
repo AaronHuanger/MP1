@@ -52,6 +52,7 @@ void MP1::read(std::string train, std::string test){
     
     std::cout << trainTime << " seconds (training)" << std::endl;
     std::cout << testTime << " seconds (labeling)" <<std::endl;
+    std::cout << "extra line " << std::endl;
 
     std::cout.setf(std::ios::fixed,std::ios::floatfield);
     std::cout.precision(3);
