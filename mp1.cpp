@@ -67,9 +67,9 @@ void MP1::trainData(std::string train){
     if(file.is_open()){
         while(getline(file, line)){
             if(line.substr(line.find(",") + 1, 1) == "0"){
-                trainHelper("0", " " + line.substr(0,line.find(",")));
+                trainHelper("0", " " + line.substr(0,line.find(",")) + " ");
             }else{
-                trainHelper("1", " " + line.substr(0,line.find(",")));
+                trainHelper("1", " " + line.substr(0,line.find(",")) + " ");
             }
         }
         file.close();
@@ -93,6 +93,7 @@ void MP1::trainHelper(std::string rate, std::string line){
     std::istringstream ss(line);
     std::string token;
 
+    if(token != " ")
     while(getline(ss, token, ' ')){
         if(/*(stopWords.find(token) == stopWords.end()) && */data->find(token) == data->end()){
             data->insert(std::pair<std::string, int>(token, 1));
@@ -120,7 +121,7 @@ std::vector<double> MP1::testData(std::string test){
     if(file.is_open()){
         while(getline(file, line)){
             if(line.substr(line.find(",") + 1, 1) == "0"){
-                labelIsNeg = testHelper("0", " " + line.substr(0,line.find(",")));
+                labelIsNeg = testHelper("0", " " + line.substr(0,line.find(",")) + " ");
                 if(labelIsNeg){
                     right++;
                     info.push_back(0);
@@ -129,7 +130,7 @@ std::vector<double> MP1::testData(std::string test){
                     info.push_back(1);
                 }
             }else{
-                labelIsNeg = testHelper("1", " " + line.substr(0,line.find(",")));
+                labelIsNeg = testHelper("1", " " + line.substr(0,line.find(",")) + " ");
                 if(labelIsNeg){
                     wrong++;
                     info.push_back(0);
@@ -159,6 +160,7 @@ bool MP1::testHelper(std::string rate, std::string line){
     std::istringstream ss(line);
     std::string token;
 
+    if(token != " ")
     while(getline(ss, token, ' ')){
         //if((stopWords.find(token) == stopWords.end())){
             if(pos.find(token) == pos.end()){
