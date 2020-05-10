@@ -173,16 +173,16 @@ bool MP1::testHelper(std::string rate, std::string line){
     while(getline(ss, token, ' ')){
         //if((stopWords.find(token) == stopWords.end())){
             if(pos.find(token) == pos.end()){
-                pWord = double(smoothing)/double(totPWord + (pos.size()*smoothing));
+                pWord = (smoothing)/(totPWord + (pos.size()*smoothing));
             }else{
-                pWord = double(pos.at(token)+smoothing)/double(totPWord + (pos.size()*smoothing));
+                pWord = (pos.at(token)+smoothing)/(totPWord + (pos.size()*smoothing));
             }
             posProb += log(pWord);
             //posProb *= pWord*pPos;
             if(neg.find(token) == neg.end()){
-                pWord = double(smoothing)/double(totNWord + (neg.size()*smoothing));
+                pWord = (smoothing)/(totNWord + (neg.size()*smoothing));
             }else{
-                pWord = double(neg.at(token)+1)/double(totNWord + (neg.size()*smoothing));
+                pWord = (neg.at(token)+1)/(totNWord + (neg.size()*smoothing));
             }
             negProb += log(pWord);
             //negProb *= pWord*pNeg;
