@@ -52,7 +52,6 @@ void MP1::read(std::string train, std::string test){
     
     std::cout << trainTime << " seconds (training)" << std::endl;
     std::cout << testTime << " seconds (labeling)" <<std::endl;
-    std::cout << "extra line " << std::endl;
 
     std::cout.setf(std::ios::fixed,std::ios::floatfield);
     std::cout.precision(3);
@@ -126,29 +125,29 @@ std::vector<double> MP1::testData(std::string test){
     std::istringstream ss(line);
     std::string token;
 
-    bool correctness;
+    bool labelIsNeg;
 
     getline(ss, token, ' ');
 
     if(file.is_open()){
         while(getline(file, line)){
             if(line.substr(line.find(",") + 1, 1) == "0"){
-                correctness = testHelper("0", line.substr(0,line.find(",")));
-                if(correctness){
-                    info.push_back(0);
+                labelIsNeg = testHelper("0", line.substr(0,line.find(",")));
+                if(labelIsNeg){
                     right++;
+                    info.push_back(0);
                 }else{
-                    info.push_back(1);
                     wrong++;
+                    info.push_back(1);
                 }
             }else{
-                correctness = testHelper("1", line.substr(0,line.find(",")));
-                if(correctness){
-                    info.push_back(1);
+                labelIsNeg = testHelper("1", line.substr(0,line.find(",")));
+                if(!labelIsNeg){
                     right++;
+                    info.push_back(1);
                 }else{
-                    info.push_back(0);
                     wrong++;
+                    info.push_back(0);
                 }
             }
         }
@@ -191,19 +190,8 @@ bool MP1::testHelper(std::string rate, std::string line){
         }
     }
 
-    if(std::max(negProb, posProb) == negProb){
-        if(rate == "0"){
-            return true;
-        }else{
-            return false;
-        }
-    }else{
-        if(rate == "1"){
-            return true;
-        }else{
-            return false;
-        }
-    }
+    return (negProb > posProb);
+
 }
 /*bool MP1::testHelper(std::string rate, std::string line){
     //int noFindCount;
