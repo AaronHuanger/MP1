@@ -23,7 +23,6 @@ void MP1::readStopText(){ //reads the stopwords.txt
 
     while(getline(file,temp)){
         stopWords.insert(temp);
-        //std::cout << temp <<std::endl;
     }
 
     file.close();
@@ -47,7 +46,7 @@ void MP1::read(std::string train, std::string test){
     testTime = double(end - start);
 
     for(size_t i = 0; i < info.size()-1;i++){
-        std::cout << info[i] << std::endl;
+        std::cout << info[i] << "\n";
     }
     testAcc = info[info.size()-1];
     
@@ -59,18 +58,6 @@ void MP1::read(std::string train, std::string test){
 
     std::cout << trainAcc << " (training)" << std::endl;
     std::cout << testAcc << " (testing)" << std::endl;
-    
-    /**
-    std::ifstream file;
-    std::string line;
-    file.open(train);
-    f(!file.is_open()){
-        std::cout << "FILE FAILED TO OPEN\n";
-    }else{
-        getline(file, line);
-        std::cout << line << std::endl;
-
-    }**/
 }
 
 void MP1::trainData(std::string train){
@@ -83,11 +70,8 @@ void MP1::trainData(std::string train){
 
     getline(ss, token, ' ');
 
-    //std::cout << line << std::endl; //outputs the test line
-
     if(file.is_open()){
         while(getline(file, line)){
-            //std::cout << line <<std::endl;
             if(line.substr(line.find(",") + 1, 1) == "0"){
                 trainHelper("0", line.substr(0,line.find(",")));
             }else{
@@ -95,8 +79,6 @@ void MP1::trainData(std::string train){
             }
         }
         file.close();
-    }else{
-        std::cout << "FILE FAILED TO OPEN\n";
     }
 }
 
@@ -128,13 +110,6 @@ void MP1::trainHelper(std::string rate, std::string line){
             //does nothing with the stop words. Stop words are completely ignored. 
         }
     }
-
-    /*
-    for (std::map<std::string,int>::iterator it = data->begin(); it != data->end(); ++it)
-        std::cout << it->first << " => " << it->second << '\n';
-    std::cout << "DOCCOUNTER: " << *docCount << std::endl;
-    std::cout << "totalNeg" << totalNeg << std::endl;
-    */
 }
 
 std::vector<double> MP1::testData(std::string test){
@@ -156,7 +131,6 @@ std::vector<double> MP1::testData(std::string test){
 
     if(file.is_open()){
         while(getline(file, line)){
-            //std::cout << line <<std::endl;
             if(line.substr(line.find(",") + 1, 1) == "0"){
                 correctness = testHelper("0", line.substr(0,line.find(",")));
                 if(correctness){
@@ -179,8 +153,6 @@ std::vector<double> MP1::testData(std::string test){
         }
         info.push_back(right/(right+wrong));
         file.close();
-    }else{
-        std::cout << "FILE FAILED TO OPEN\n";
     }
     return info;
 }
@@ -202,16 +174,16 @@ bool MP1::testHelper(std::string rate, std::string line){
     while(getline(ss, token, ' ')){
         if((stopWords.find(token) == stopWords.end())){
             if(pos.find(token) == pos.end()){
-                pWord = double(smoothing)/(totPWord + pos.size());
+                pWord = double(smoothing)/double(totPWord + pos.size());
             }else{
-                pWord = double(pos.at(token)+smoothing)/(totPWord + pos.size());
+                pWord = double(pos.at(token)+smoothing)/double(totPWord + pos.size());
             }
             posProb += log(pWord*pPos);
             //posProb *= pWord*pPos;
             if(neg.find(token) == neg.end()){
-                pWord = double(smoothing)/(totNWord + neg.size());
+                pWord = double(smoothing)/double(totNWord + neg.size());
             }else{
-                pWord = double(neg.at(token)+1)/(totNWord + neg.size());
+                pWord = double(neg.at(token)+1)/double(totNWord + neg.size());
             }
             negProb += log(pWord*pNeg);
             //negProb *= pWord*pNeg;
