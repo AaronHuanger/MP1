@@ -91,10 +91,10 @@ void MP1::trainHelper(std::string rate, std::string line){
     }
     
     std::istringstream ss(line);
-    std::string token;
+    std::string token = " ";
 
-    if(token != " ")
     while(getline(ss, token, ' ')){
+        if(token != " "){
         if(/*(stopWords.find(token) == stopWords.end()) && */data->find(token) == data->end()){
             data->insert(std::pair<std::string, int>(token, 1));
             *docCount += 1;
@@ -103,6 +103,7 @@ void MP1::trainHelper(std::string rate, std::string line){
             *docCount += 1;
         }else{
             //does nothing with the stop words. Stop words are completely ignored. 
+        }
         }
     }
 }
@@ -158,11 +159,12 @@ bool MP1::testHelper(std::string rate, std::string line){
     double pWord; // P(D | C)
     
     std::istringstream ss(line);
-    std::string token;
+    std::string token = " ";
 
-    if(token != " ")
+    
     while(getline(ss, token, ' ')){
         //if((stopWords.find(token) == stopWords.end())){
+        if(token != " "){
             if(pos.find(token) == pos.end()){
                 pWord = (smoothing)/(totPWord + (pos.size()*smoothing));
             }else{
@@ -178,6 +180,7 @@ bool MP1::testHelper(std::string rate, std::string line){
             negProb += log(pWord);
             //negProb *= pWord*pNeg;
         //}
+        }
     }
     negProb += log(pNeg);
     posProb += log(pPos);
