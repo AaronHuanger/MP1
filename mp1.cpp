@@ -39,14 +39,16 @@ void MP1::read(std::string train, std::string test){
     trainAcc = info[info.size()-1];
     trainTime = double(end - start);
 
+    testing = true;
+
     time(&start);
     info = testData(test);
     time(&end);
     testTime = double(end - start);
 
-    for(size_t i = 0; i < info.size()-1;i++){
+    /*for(size_t i = 0; i < info.size()-1;i++){
         std::cout << info[i] << "\n";
-    }
+    }*/
     testAcc = info[info.size()-1];
     
     std::cout << trainTime << " seconds (training)" << std::endl;
@@ -188,8 +190,12 @@ bool MP1::testHelper(std::string rate, std::string line){
             //negProb *= pWord*pNeg;
         //}
     }
-    
-    return (negProb > posProb);
+    if(negProb > posProb && testing == true){
+        std::cout << 0 << std::endl; 
+    }else if(posProb >= negProb && testing == true){
+        std::cout << 1 <<std::endl;
+    }
+    return (std::max(negProb, posProb) == negProb);
 
 }
 /*bool MP1::testHelper(std::string rate, std::string line){
