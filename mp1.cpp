@@ -189,7 +189,7 @@ bool MP1::testHelper(std::string rate, std::string line){
         //}
     }
     
-    return (std::max(negProb, posProb) == negProb);
+    return (negProb > posProb);
 
 }
 /*bool MP1::testHelper(std::string rate, std::string line){
