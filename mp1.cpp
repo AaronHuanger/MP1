@@ -32,7 +32,7 @@ void MP1::read(std::string train, std::string test){
     time_t start, end;
 
     time(&start);
-    //readStopText(); //makes the stop word text set
+    readStopText(); //makes the stop word text set
     trainData(train);
     info = testData(train);
     time(&end);
@@ -95,15 +95,15 @@ void MP1::trainHelper(std::string rate, std::string line){
 
     while(getline(ss, token, ' ')){
         if(token != " "){
-        if(/*(stopWords.find(token) == stopWords.end()) && */data->find(token) == data->end()){
-            data->insert(std::pair<std::string, int>(token, 1));
-            *docCount += 1;
-        }else if(data->find(token) != data->end()){
-            data->at(token)++;
-            *docCount += 1;
-        }else{
-            //does nothing with the stop words. Stop words are completely ignored. 
-        }
+            if((stopWords.find(token) == stopWords.end()) && data->find(token) == data->end()){
+                data->insert(std::pair<std::string, int>(token, 1));
+                *docCount += 1;
+            }else if(data->find(token) != data->end()){
+                data->at(token)++;
+                *docCount += 1;
+            }else{
+                //does nothing with the stop words. Stop words are completely ignored. 
+            }
         }
     }
 }
@@ -163,9 +163,9 @@ bool MP1::testHelper(std::string rate, std::string line){
 
     
     while(getline(ss, token, ' ')){
-        //if((stopWords.find(token) == stopWords.end())){
+        //if(()){
         if(token != " "){
-            if(pos.find(token) == pos.end()){
+            if(stopWords.find(token) == stopWords.end() && pos.find(token) == pos.end()){
                 pWord = (smoothing)/(totPWord + (pos.size()*smoothing));
             }else{
                 pWord = (pos.at(token)+smoothing)/(totPWord + (pos.size()*smoothing));
