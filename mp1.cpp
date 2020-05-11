@@ -109,8 +109,18 @@ void MP1::trainHelper(std::string rate, std::string line){
         data = &neg;
         docCount = &totNWord;
     }
-    
-    for(size_t i = 0; i < words.size()-1; i++){
+    if(words.size() > 2){
+    for(size_t i = 0; i < words.size()-2; i++){
+            if(data->find(words[i] + " " + words[i+1] + " " + words[i+2]) == data->end()){
+                data->insert(std::pair<std::string, int>(words[i] + " " + words[i+1] + " " + words[i+2], 1)); //space probably not necessary
+                *docCount += 1;
+            }else if(data->find(words[i] + " " + words[i+1] + " " + words[i+2]) != data->end()){
+                data->at(words[i] + " " + words[i+1] + " " + words[i+2])++;
+                *docCount += 1;
+            }
+    }
+    }else{
+        for(size_t i = 0; i < words.size()-1; i++){
             if(data->find(words[i] + " " + words[i+1]) == data->end()){
                 data->insert(std::pair<std::string, int>(words[i] + " " + words[i+1], 1)); //space probably not necessary
                 *docCount += 1;
@@ -118,8 +128,9 @@ void MP1::trainHelper(std::string rate, std::string line){
                 data->at(words[i] + " " + words[i+1])++;
                 *docCount += 1;
             }
+        }
     }
-    
+
     /*
     while(getline(ss, token, ' ')){
         if(token != " "){
@@ -194,8 +205,25 @@ bool MP1::testHelper(std::string rate, std::string line){
             words.push_back(token);
         }
     }
-    
-    for(size_t i = 0; i < words.size()-1; i++){
+    if(words.size() > 2){
+    for(size_t i = 0; i < words.size()-2; i++){
+            if(pos.find(words[i] + " " + words[i+1] + " " + words[i+2]) == pos.end()){
+                pWord = (smoothing)/(totPWord + (pos.size()*smoothing));
+            }else{
+                pWord = (pos.at(words[i] + " " + words[i+1] + " " + words[i+2])+smoothing)/(totPWord + (pos.size()*smoothing));
+            }
+            posProb += log(pWord);
+            //posProb *= pWord*pPos;
+            if(neg.find(words[i] + " " + words[i+1] + " " + words[i+2]) == neg.end()){
+                pWord = (smoothing)/(totNWord + (neg.size()*smoothing));
+            }else{
+                pWord = (neg.at(words[i] + " " + words[i+1] + " " + words[i+2])+1)/(totNWord + (neg.size()*smoothing));
+            }
+            negProb += log(pWord);
+            //negProb *= pWord*pNeg;
+    }
+    }else{
+        for(size_t i = 0; i < words.size()-1; i++){
             if(pos.find(words[i] + " " + words[i+1]) == pos.end()){
                 pWord = (smoothing)/(totPWord + (pos.size()*smoothing));
             }else{
@@ -210,6 +238,7 @@ bool MP1::testHelper(std::string rate, std::string line){
             }
             negProb += log(pWord);
             //negProb *= pWord*pNeg;
+        }
     }
     negProb += log(pNeg);
     posProb += log(pPos);
