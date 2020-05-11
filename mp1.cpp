@@ -90,6 +90,15 @@ void MP1::trainData(std::string train){
 void MP1::trainHelper(std::string rate, std::string line){
     std::unordered_map<std::string, int>* data;
 
+    std::istringstream ss(line);
+    std::string token = " ";
+    std::vector<std::string> words; //stores all the individual words so that you can store the bigrams
+    words.resize(0);
+    while(getline(ss, token, ' ')){
+        if(stopWords.find(token) == stopWords.end()){ //if its not a stopword then put it into the vector
+            words.push_back(token);
+        }
+    }
     double* docCount; 
     if(rate == "1"){
         totalPos++;
@@ -101,9 +110,17 @@ void MP1::trainHelper(std::string rate, std::string line){
         docCount = &totNWord;
     }
     
-    std::istringstream ss(line);
-    std::string token = " ";
-
+    for(size_t i = 0; i < words.size()-1; i++){
+            if(data->find(words[i] + " " + words[i+1]) == data->end()){
+                data->insert(std::pair<std::string, int>(words[i] + " " + words[i+1], 1)); //space probably not necessary
+                *docCount += 1;
+            }else if(data->find(words[i] + " " + words[i+1]) != data->end()){
+                data->at(words[i] + " " + words[i+1])++;
+                *docCount += 1;
+            }
+    }
+    
+    /*
     while(getline(ss, token, ' ')){
         if(token != " "){
             if((stopWords.find(token) == stopWords.end()) && data->find(token) == data->end()){
@@ -116,7 +133,7 @@ void MP1::trainHelper(std::string rate, std::string line){
                 //does nothing with the stop words. Stop words are completely ignored. 
             }
         }
-    }
+    }*/
 }
 
 std::vector<double> MP1::testData(std::string test){
@@ -171,27 +188,28 @@ bool MP1::testHelper(std::string rate, std::string line){
     
     std::istringstream ss(line);
     std::string token = " ";
-
-    
+    std::vector<std::string> words; //stores all the individual words so that you can store the bigrams
     while(getline(ss, token, ' ')){
-        //if(()){
-        if(token != " "){
-            if(stopWords.find(token) == stopWords.end() && pos.find(token) == pos.end()){
+        if(stopWords.find(token) == stopWords.end()){ //if its not a stopword then put it into the vector
+            words.push_back(token);
+        }
+    }
+    
+    for(size_t i = 0; i < words.size()-1; i++){
+            if(pos.find(words[i] + " " + words[i+1]) == pos.end()){
                 pWord = (smoothing)/(totPWord + (pos.size()*smoothing));
             }else{
-                pWord = (pos.at(token)+smoothing)/(totPWord + (pos.size()*smoothing));
+                pWord = (pos.at(words[i] + " " + words[i+1])+smoothing)/(totPWord + (pos.size()*smoothing));
             }
             posProb += log(pWord);
             //posProb *= pWord*pPos;
-            if(neg.find(token) == neg.end()){
+            if(neg.find(words[i] + " " + words[i+1]) == neg.end()){
                 pWord = (smoothing)/(totNWord + (neg.size()*smoothing));
             }else{
-                pWord = (neg.at(token)+1)/(totNWord + (neg.size()*smoothing));
+                pWord = (neg.at(words[i] + " " + words[i+1])+1)/(totNWord + (neg.size()*smoothing));
             }
             negProb += log(pWord);
             //negProb *= pWord*pNeg;
-        //}
-        }
     }
     negProb += log(pNeg);
     posProb += log(pPos);
