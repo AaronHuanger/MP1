@@ -54,19 +54,9 @@ void MP1::read(std::string train, std::string test){
 
     std::cout.setf(std::ios::fixed,std::ios::floatfield);
     std::cout.precision(3);
-s
+
     std::cout << trainAcc << " (training)" << std::endl;
     std::cout << testAcc << " (testing)" << std::endl;
-
-
-    /*std::cout << "totPWord: " << totPWord <<std::endl;
-    std::cout << "totNWord: " << totNWord <<std::endl;
-
-    std::cout << "totalPos: " << totalPos << std::endl;
-    std::cout << "totalNeg: " << totalNeg << std::endl;
-
-    std::cout << "posMapSize: " << pos.size() << std::endl;
-    std::cout << "negMapSize: " << neg.size() << std::endl; */
 }
 
 void MP1::trainData(std::string train){
@@ -77,9 +67,9 @@ void MP1::trainData(std::string train){
     if(file.is_open()){
         while(getline(file, line)){
             if(line.substr(line.find(",") + 1, 1) == "0"){
-                trainHelper("0", line.substr(0,line.find(",")) + " ");
+                trainHelper("0", " " + line.substr(0,line.find(",")) + " ");
             }else{
-                trainHelper("1", line.substr(0,line.find(",")) + " ");
+                trainHelper("1", " " + line.substr(0,line.find(",")) + " ");
             }
         }
         file.close();
@@ -132,7 +122,7 @@ std::vector<double> MP1::testData(std::string test){
     if(file.is_open()){
         while(getline(file, line)){
             if(line.substr(line.find(",") + 1, 1) == "0"){
-                labelIsNeg = testHelper("0", line.substr(0,line.find(",")) + " ");
+                labelIsNeg = testHelper("0", " " + line.substr(0,line.find(",")) + " ");
                 if(labelIsNeg){
                     right++;
                     info.push_back(0);
@@ -141,7 +131,7 @@ std::vector<double> MP1::testData(std::string test){
                     info.push_back(1);
                 }
             }else{
-                labelIsNeg = testHelper("1", line.substr(0,line.find(",")) + " ");
+                labelIsNeg = testHelper("1", " " + line.substr(0,line.find(",")) + " ");
                 if(labelIsNeg){
                     wrong++;
                     info.push_back(0);
