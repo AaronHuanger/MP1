@@ -54,7 +54,7 @@ void MP1::read(std::string train, std::string test){
 
     std::cout.setf(std::ios::fixed,std::ios::floatfield);
     std::cout.precision(3);
-
+s
     std::cout << trainAcc << " (training)" << std::endl;
     std::cout << testAcc << " (testing)" << std::endl;
 
