@@ -26,14 +26,11 @@ class MP1
 
         public:
             void read(std::string train, std::string test);
-
             void trainData(std::string train);
             void readStopText();
             void trainHelper(std::string rate, std::string line);
-
             std::vector<double> testData(std::string test);
             bool testHelper(std::string rate, std::string line);
-
     };
 
 
