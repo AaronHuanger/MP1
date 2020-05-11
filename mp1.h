@@ -1,14 +1,14 @@
 #ifndef MP1_H
 #define DATE_H
-#include <map>
+#include <unordered_map>
 #include <iterator>
 #include <set>
 #include <vector>
 class MP1
     {
         private:   
-            std::map<std::string, int> pos;
-            std::map<std::string, int> neg;
+            std::unordered_map<std::string, int> pos;
+            std::unordered_map<std::string, int> neg;
             double totPWord = 0;
             double totNWord = 0;
 

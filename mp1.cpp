@@ -57,6 +57,16 @@ void MP1::read(std::string train, std::string test){
 
     std::cout << trainAcc << " (training)" << std::endl;
     std::cout << testAcc << " (testing)" << std::endl;
+
+
+    std::cout << "totPWord: " << totPWord <<std::endl;
+    std::cout << "totNWord: " << totNWord <<std::endl;
+
+    std::cout << "totalPos: " << totalPos << std::endl;
+    std::cout << "totalNeg: " << totalNeg << std::endl;
+
+    std::cout << "posMapSize: " << pos.size() << std::endl;
+    std::cout << "negMapSize: " << neg.size() << std::endl; 
 }
 
 void MP1::trainData(std::string train){
@@ -77,7 +87,7 @@ void MP1::trainData(std::string train){
 }
 
 void MP1::trainHelper(std::string rate, std::string line){
-    std::map<std::string, int>* data;
+    std::unordered_map<std::string, int>* data;
 
     double* docCount; 
     if(rate == "1"){
