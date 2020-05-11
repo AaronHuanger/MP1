@@ -59,14 +59,14 @@ void MP1::read(std::string train, std::string test){
     std::cout << testAcc << " (testing)" << std::endl;
 
 
-    std::cout << "totPWord: " << totPWord <<std::endl;
+    /*std::cout << "totPWord: " << totPWord <<std::endl;
     std::cout << "totNWord: " << totNWord <<std::endl;
 
     std::cout << "totalPos: " << totalPos << std::endl;
     std::cout << "totalNeg: " << totalNeg << std::endl;
 
     std::cout << "posMapSize: " << pos.size() << std::endl;
-    std::cout << "negMapSize: " << neg.size() << std::endl; 
+    std::cout << "negMapSize: " << neg.size() << std::endl; */
 }
 
 void MP1::trainData(std::string train){
