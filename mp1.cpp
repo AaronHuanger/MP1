@@ -78,9 +78,9 @@ void MP1::trainData(std::string train){
     if(file.is_open()){
         while(getline(file, line)){
             if(line.substr(line.find(",") + 1, 1) == "0"){
-                trainHelper("0", " " + line.substr(0,line.find(",")) + " ");
+                trainHelper("0", line.substr(0,line.find(",")));
             }else{
-                trainHelper("1", " " + line.substr(0,line.find(",")) + " ");
+                trainHelper("1", line.substr(0,line.find(",")));
             }
         }
         file.close();
@@ -133,7 +133,7 @@ std::vector<double> MP1::testData(std::string test){
     if(file.is_open()){
         while(getline(file, line)){
             if(line.substr(line.find(",") + 1, 1) == "0"){
-                labelIsNeg = testHelper("0", " " + line.substr(0,line.find(",")) + " ");
+                labelIsNeg = testHelper("0",line.substr(0,line.find(",")));
                 if(labelIsNeg){
                     right++;
                     info.push_back(0);
@@ -142,7 +142,7 @@ std::vector<double> MP1::testData(std::string test){
                     info.push_back(1);
                 }
             }else{
-                labelIsNeg = testHelper("1", " " + line.substr(0,line.find(",")) + " ");
+                labelIsNeg = testHelper("1",line.substr(0,line.find(",")));
                 if(labelIsNeg){
                     wrong++;
                     info.push_back(0);
