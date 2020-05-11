@@ -77,7 +77,7 @@ void MP1::trainData(std::string train){
 }
 
 void MP1::trainHelper(std::string rate, std::string line){
-    std::unordered_map<std::string, int>* data;
+    std::map<std::string, int>* data;
 
     double* docCount; 
     if(rate == "1"){
