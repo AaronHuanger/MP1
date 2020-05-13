@@ -19,13 +19,43 @@ void MP1::readStopText(){ //reads the stopwords.txt
     
     file.open("stopwords.txt");
     std::string temp;
-    //getline(file,temp, '%');
 
     while(getline(file,temp)){
         stopWords.insert(temp);
     }
 
     file.close();
+}
+
+double MP1::printBigramHelper(std::string word, std::string label){
+    std::unordered_map<std::string, int>* data;
+    double *total;
+    double numerator = 0;
+    if(label == "pos"){
+        data = &pos;
+        total = &totPWord;
+    }else{
+        data = &neg;
+        total = &totNWord;
+    }
+
+    if(data->find(word) != data->end()){
+        numerator = data->at(word);
+    }
+
+    return double(numerator/ *total);
+}
+void MP1::printBigram(){
+    for (std::unordered_map<std::string,int>::iterator it=pos.begin(); it!=pos.end(); ++it){
+        if((double(it->second)/double(totPWord)) > (printBigramHelper(it->first, "neg") + 0.0002) && double(it->second)/double(totPWord) > 100/double(totPWord)){
+            std::cout << "Pos: " << it->first << " => " << double(it->second)/double(totPWord) << "  Neg: " << it->first << " => " << printBigramHelper(it->first, "neg")<< '\n';
+        }
+    }
+    for (std::unordered_map<std::string,int>::iterator it=neg.begin(); it!=neg.end(); ++it){
+        if((double(it->second)/double(totNWord)) > (printBigramHelper(it->first, "pos") + 0.0002) && double(it->second)/double(totNWord) > 100/double(totNWord)){
+            std::cout << "Neg: " << it->first << " => " << double(it->second)/double(totNWord) << "  Pos: " << it->first << " => " << printBigramHelper(it->first, "pos")<< '\n';
+        }
+    }
 }
 void MP1::read(std::string train, std::string test){
     std::vector<double> info;
@@ -57,9 +87,8 @@ void MP1::read(std::string train, std::string test){
 
     std::cout << trainAcc << " (training)" << std::endl;
     std::cout << testAcc << " (testing)" << std::endl;
+    printBigram();
 
-    //std::cout.precision(10);
-    //printBigram();
     /*std::cout << "totPWord: " << totPWord <<std::endl;
     std::cout << "totNWord: " << totNWord <<std::endl;
     std::cout << "totalPos: " << totalPos << std::endl;
@@ -71,36 +100,7 @@ void MP1::read(std::string train, std::string test){
         std::cout << it->first << " => " << it->second << '\n';
     */
 }
-double MP1::printBigramHelper(std::string word, std::string label){
-    std::unordered_map<std::string, int>* data;
-    double *total;
-    double numerator = 0;
-    if(label == "pos"){
-        data = &pos;
-        total = &totPWord;
-    }else{
-        data = &neg;
-        total = &totNWord;
-    }
 
-    if(data->find(word) != data->end()){
-        numerator = data->at(word);
-    }
-
-    return double(numerator/ *total);
-}
-void MP1::printBigram(){
-    for (std::unordered_map<std::string,int>::iterator it=pos.begin(); it!=pos.end(); ++it){
-        if((double(it->second)/double(totPWord)) > (printBigramHelper(it->first, "neg") + 0.0002) && double(it->second)/double(totPWord) > 100/double(totPWord)){
-            std::cout << "Pos: " << it->first << " => " << double(it->second)/double(totPWord) << "  Neg: " << it->first << " => " << printBigramHelper(it->first, "neg")<< '\n';
-        }
-    }
-    for (std::unordered_map<std::string,int>::iterator it=neg.begin(); it!=neg.end(); ++it){
-        if((double(it->second)/double(totNWord)) > (printBigramHelper(it->first, "pos") + 0.0002) && double(it->second)/double(totNWord) > 100/double(totNWord)){
-            std::cout << "Neg: " << it->first << " => " << double(it->second)/double(totNWord) << "  Pos: " << it->first << " => " << printBigramHelper(it->first, "pos")<< '\n';
-        }
-    }
-}
 void MP1::trainData(std::string train){
     std::ifstream file;
     file.open(train);
@@ -109,9 +109,9 @@ void MP1::trainData(std::string train){
     if(file.is_open()){
         while(getline(file, line)){
             if(line.substr(line.find(",") + 1, 1) == "0"){
-                trainHelper("0", " " + line.substr(0,line.find(",")) + " ");
+                trainHelper("0"," " + line.substr(0,line.find(",")) + " ");
             }else{
-                trainHelper("1", " " + line.substr(0,line.find(",")) + " ");
+                trainHelper("1"," " + line.substr(0,line.find(",")) + " ");
             }
         }
         file.close();
@@ -236,14 +236,14 @@ bool MP1::testHelper(std::string rate, std::string line){
     
     for(size_t i = 0; i < words.size()-1; i++){
             if(pos.find(words[i] + " " + words[i+1]) == pos.end()){
-                pWord = (smoothing)/(totPWord + (pos.size()*smoothing));
+                pWord = (smoothing)/(totPWord + (unique*smoothing));
             }else{
                 pWord = (pos.at(words[i] + " " + words[i+1])+smoothing)/(totPWord + (pos.size()*smoothing));
             }
             posProb += log(pWord);
             //posProb *= pWord*pPos;
             if(neg.find(words[i] + " " + words[i+1]) == neg.end()){
-                pWord = (smoothing)/(totNWord + (neg.size()*smoothing));
+                pWord = (smoothing)/(totNWord + (unique*smoothing));
             }else{
                 pWord = (neg.at(words[i] + " " + words[i+1])+1)/(totNWord + (neg.size()*smoothing));
             }
