@@ -13,7 +13,9 @@ class MP1
             double totNWord = 0;
 
             double totalPos = 0;
-            double totalNeg = 0;           
+            double totalNeg = 0;
+            double unique = 0;
+            
             std::set<std::string> stopWords;
 
             double testTime = 0;
@@ -22,7 +24,7 @@ class MP1
             double trainTime = 0;
             double trainAcc = 0;
 
-            double smoothing = 2.25;
+            double smoothing = 1;
 
         public:
             void read(std::string train, std::string test);
