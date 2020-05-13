@@ -19,13 +19,43 @@ void MP1::readStopText(){ //reads the stopwords.txt
     
     file.open("stopwords.txt");
     std::string temp;
-    getline(file,temp, '%');
 
     while(getline(file,temp)){
         stopWords.insert(temp);
     }
 
     file.close();
+}
+
+double MP1::printBigramHelper(std::string word, std::string label){
+    std::unordered_map<std::string, int>* data;
+    double *total;
+    double numerator = 0;
+    if(label == "pos"){
+        data = &pos;
+        total = &totPWord;
+    }else{
+        data = &neg;
+        total = &totNWord;
+    }
+
+    if(data->find(word) != data->end()){
+        numerator = data->at(word);
+    }
+
+    return double(numerator/ *total);
+}
+void MP1::printBigram(){
+    for (std::unordered_map<std::string,int>::iterator it=pos.begin(); it!=pos.end(); ++it){
+        if((double(it->second)/double(totPWord)) > (printBigramHelper(it->first, "neg") + 0.0002) && double(it->second)/double(totPWord) > 100/double(totPWord)){
+            std::cout << "Pos: " << it->first << " => " << double(it->second)/double(totPWord) << "  Neg: " << it->first << " => " << printBigramHelper(it->first, "neg")<< '\n';
+        }
+    }
+    for (std::unordered_map<std::string,int>::iterator it=neg.begin(); it!=neg.end(); ++it){
+        if((double(it->second)/double(totNWord)) > (printBigramHelper(it->first, "pos") + 0.0002) && double(it->second)/double(totNWord) > 100/double(totNWord)){
+            std::cout << "Neg: " << it->first << " => " << double(it->second)/double(totNWord) << "  Pos: " << it->first << " => " << printBigramHelper(it->first, "pos")<< '\n';
+        }
+    }
 }
 void MP1::read(std::string train, std::string test){
     std::vector<double> info;
@@ -57,6 +87,7 @@ void MP1::read(std::string train, std::string test){
 
     std::cout << trainAcc << " (training)" << std::endl;
     std::cout << testAcc << " (testing)" << std::endl;
+    //printBigram();
 
     /*std::cout << "totPWord: " << totPWord <<std::endl;
     std::cout << "totNWord: " << totNWord <<std::endl;
@@ -78,9 +109,9 @@ void MP1::trainData(std::string train){
     if(file.is_open()){
         while(getline(file, line)){
             if(line.substr(line.find(",") + 1, 1) == "0"){
-                trainHelper("0", " " + line.substr(0,line.find(",")) + " ");
+                trainHelper("0",line.substr(0,line.find(",")) + " ");
             }else{
-                trainHelper("1", " " + line.substr(0,line.find(",")) + " ");
+                trainHelper("1", line.substr(0,line.find(",")) + " ");
             }
         }
         file.close();
@@ -158,7 +189,7 @@ std::vector<double> MP1::testData(std::string test){
     if(file.is_open()){
         while(getline(file, line)){
             if(line.substr(line.find(",") + 1, 1) == "0"){
-                labelIsNeg = testHelper("0"," " + line.substr(0,line.find(",")) + " ");
+                labelIsNeg = testHelper("0",line.substr(0,line.find(",")) + " ");
                 if(labelIsNeg){
                     right++;
                     info.push_back(0);
@@ -167,7 +198,7 @@ std::vector<double> MP1::testData(std::string test){
                     info.push_back(1);
                 }
             }else{
-                labelIsNeg = testHelper("1"," " + line.substr(0,line.find(",")) + " ");
+                labelIsNeg = testHelper("1",line.substr(0,line.find(",")) + " ");
                 if(labelIsNeg){
                     wrong++;
                     info.push_back(0);

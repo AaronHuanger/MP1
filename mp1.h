@@ -15,7 +15,7 @@ class MP1
             double totalPos = 0;
             double totalNeg = 0;
             double unique = 0;
-            
+
             std::set<std::string> stopWords;
 
             double testTime = 0;
@@ -35,6 +35,8 @@ class MP1
 
             std::vector<double> testData(std::string test);
             bool testHelper(std::string rate, std::string line);
+            void printBigram();
+            double printBigramHelper(std::string word, std::string label);
 
     };
 
