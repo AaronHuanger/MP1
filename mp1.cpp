@@ -57,19 +57,6 @@ void MP1::read(std::string train, std::string test){
 
     std::cout << trainAcc << " (training)" << std::endl;
     std::cout << testAcc << " (testing)" << std::endl;
-
-    //std::cout.precision(10);
-    //printBigram();
-    /*std::cout << "totPWord: " << totPWord <<std::endl;
-    std::cout << "totNWord: " << totNWord <<std::endl;
-    std::cout << "totalPos: " << totalPos << std::endl;
-    std::cout << "totalNeg: " << totalNeg << std::endl;
-    std::cout << "posMapSize: " << pos.size() << std::endl;
-    std::cout << "negMapSize: " << neg.size() << std::endl; 
-    std::cout << "negMapSize: " << neg.size() << std::endl;
-    for (std::map<std::string,int>::iterator it=pos.begin(); it!=pos.find("aa"); ++it)
-        std::cout << it->first << " => " << it->second << '\n';
-    */
 }
 double MP1::printBigramHelper(std::string word, std::string label){
     std::unordered_map<std::string, int>* data;
@@ -158,21 +145,6 @@ void MP1::trainHelper(std::string rate, std::string line){
                 *docCount += 1;
             }
     }
-    
-    /*
-    while(getline(ss, token, ' ')){
-        if(token != " "){
-            if((stopWords.find(token) == stopWords.end()) && data->find(token) == data->end()){
-                data->insert(std::pair<std::string, int>(token, 1));
-                *docCount += 1;
-            }else if(data->find(token) != data->end()){
-                data->at(token)++;
-                *docCount += 1;
-            }else{
-                //does nothing with the stop words. Stop words are completely ignored. 
-            }
-        }
-    }*/
 }
 
 std::vector<double> MP1::testData(std::string test){
@@ -256,52 +228,3 @@ bool MP1::testHelper(std::string rate, std::string line){
     return (negProb > posProb);
 
 }
-/*bool MP1::testHelper(std::string rate, std::string line){
-    //int noFindCount;
-
-    int posProb = 0;
-    int negProb = 0;
-    
-    int posMatch = 0;
-    int negMatch = 0;
-    
-    std::istringstream ss(line);
-    std::string token;
-
-    while(getline(ss, token, ' ')){
-        if((stopWords.find(token) == stopWords.end()) && pos.find(token) == pos.end()){
-            //noFindCount += fakeConst;
-            posProb += log(fakeConst/(totalPos + fakeConst));
-        }else if(pos.find(token) != pos.end()){
-            posProb += log(pos.at(token)/totalPos);        
-            posMatch++;
-        }else{
-            //does nothing with the stop words. Stop words are completely ignored. 
-        }
-    }
-    while(getline(ss, token, ' ')){
-        if((stopWords.find(token) == stopWords.end()) && neg.find(token) == neg.end()){
-            //noFindCount += fakeConst;
-            negProb += log(fakeConst/(totalNeg + fakeConst));
-        }else if(neg.find(token) != neg.end()){
-            negProb += log(neg.at(token)/totalNeg);        
-            negMatch++;
-        }else{
-            //does nothing with the stop words. Stop words are completely ignored. 
-        }
-    }
-
-    if(std::max(negMatch, posMatch) == negMatch){
-        if(rate == "0"){
-            return true;
-        }else{
-            return false;
-        }
-    }else{
-        if(rate == "1"){
-            return true;
-        }else{
-            return false;
-        }
-    }
-}*/
